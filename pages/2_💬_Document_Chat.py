@@ -4,7 +4,7 @@ from utils import initialize_session_state
 
 # Page config
 st.set_page_config(
-    page_title="Document Chat |  BureauEase-AI",
+    page_title="Document Chat |  CiviDoc AI",
     page_icon="💬",
     layout="centered",
     initial_sidebar_state="collapsed",
@@ -102,31 +102,76 @@ def handle_user_input(prompt, selected_doc):
     # Display user message
     with st.chat_message("user"):
         st.write(prompt)
-    
+
+    from groq import Groq
     # Generate and display assistant response
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            try:
-                chat_engine = st.session_state.chat_engines[selected_doc]
-                response = chat_engine.chat(prompt)
-                assistant_response = response.response
+            # try:
+            #     chat_engine = st.session_state.chat_engines[selected_doc]
+            #     response = chat_engine.chat(prompt)
+            #     assistant_response = response.response
                 
-                # Add assistant response to messages
+            #     # Add assistant response to messages
+            #     st.session_state.messages.append({
+            #         "role": "assistant",
+            #         "content": assistant_response
+            #     })
+                
+            #     # Display response
+            #     st.write(assistant_response)
+            
+            # except Exception as e:
+            #     error_message = f"Sorry, I encountered an error: {str(e)}"
+            #     st.error(error_message)
+            #     st.session_state.messages.append({
+            #         "role": "assistant",
+            #         "content": error_message
+            #     })
+
+            groq_api_key = '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'
+            client = Groq(api_key=groq_api_key)
+
+            groq_api_key = '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'
+            client = Groq(api_key=groq_api_key)
+
+            try:
+                # Construct the prompt
+                prompt = f"You are an AI assistant presenting my app. Here is the input: {prompt} give response related to this docs {selected_doc}"
+                
+                # Make a request to the Groq client
+                response = client.chat.completions.create(
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant."},  # System context
+                        {"role": "user", "content": prompt},  # User input
+                    ],
+                    model="llama-3.1-8b-instant",  # Model name
+                )
+
+                # Extract the assistant's response correctly
+                assistant_response = response.choices[0].message.content
+
+                # Add the assistant's response to messages
                 st.session_state.messages.append({
                     "role": "assistant",
                     "content": assistant_response
                 })
-                
-                # Display response
-                st.write(assistant_response)
-            
+
+                # Display the response in the Streamlit app
+                st.markdown(assistant_response)
+
             except Exception as e:
-                error_message = f"Sorry, I encountered an error: {str(e)}"
+                # Handle errors and display in Streamlit
+                error_message = f"Error getting AI insights: {str(e)}"
                 st.error(error_message)
+
+                # Add the error message to messages
                 st.session_state.messages.append({
                     "role": "assistant",
                     "content": error_message
                 })
-                
+
+
+
 if __name__ == "__main__":
     document_chat_page()

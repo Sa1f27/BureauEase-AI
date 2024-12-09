@@ -16,7 +16,7 @@ def main():
     # Header
     st.markdown(show_page_header(
         "<div style='text-align: center;'>"
-        "🏛️ CiviDoc AI",
+        "🏛️ BureauEase-AI",
         "<div style='text-align: center;'>"
         "Your AI-powered companion for all government document needs",
     ), unsafe_allow_html=True)
