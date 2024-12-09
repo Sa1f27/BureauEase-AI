@@ -1,0 +1,52 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Virtual Environment
+venv/
+env/
+.venv/
+.env/
+my_env/
+my_env
+
+# Streamlit
+.streamlit/
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Dependency directories
+node_modules/
+dist/
+build/
+
+# Misc
+.DS_Store  # macOS specific
+Thumbs.db  # Windows specific
+
+# Logs and Databases
+*.log
+*.sqlite3
+
+# Python environment configuration
+*.env
+*.envrc
+
+# .pytest_cache
+.pytest_cache/
+
+# PyCharm
+*.iml
+.idea/
+
+# Test Coverage
+.coverage
+.coverage.*
+.devcontainer
