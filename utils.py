@@ -14,13 +14,11 @@ from datetime import datetime
 from PIL import Image
 import gettext
 
-# Load environment variables and configure
-load_dotenv()
-groq_api_key = os.getenv("GROQ_API_KEY")
-client = Groq(api_key=groq_api_key)
+GROQ_API_KEY = st.secrets["api_keys"]["groq_api_key"]
+client = Groq(api_key=GROQ_API_KEY)
 
 # Configure LlamaIndex
-Settings.llm = LlamaGroq(api_key=groq_api_key, model="llama-3.2-90b-vision-preview")
+Settings.llm = LlamaGroq(api_key=GROQ_API_KEY, model="llama-3.2-90b-vision-preview")
 lc_embed_model = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-mpnet-base-v2"
 )

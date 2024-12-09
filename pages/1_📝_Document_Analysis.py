@@ -1,6 +1,7 @@
 import streamlit as st
 from PIL import Image
 import datetime
+from datetime import datetime
 from theme import apply_dark_theme, show_page_header, show_footer
 from utils import (
     process_image, 
@@ -15,7 +16,7 @@ from utils import (
 
 # Page config
 st.set_page_config(
-    page_title="Document Analysis |  CiviDoc AI",
+    page_title="Document Analysis |  BureauEase-AI",
     page_icon="📝",
     layout="centered",
     initial_sidebar_state="collapsed",

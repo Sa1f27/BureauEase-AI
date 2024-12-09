@@ -4,7 +4,7 @@ from utils import initialize_session_state
 
 # Page config
 st.set_page_config(
-    page_title="Document Chat |  CiviDoc AI",
+    page_title="Document Chat |  BureauEase-AI",
     page_icon="💬",
     layout="centered",
     initial_sidebar_state="collapsed",
