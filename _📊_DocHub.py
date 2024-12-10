@@ -17,20 +17,21 @@ def render_header():
     """Render the main header with a gradient background."""
     st.markdown(custom_css(), unsafe_allow_html=True)
     with st.container():
-        col1, col2 = st.columns([4, 1])
+        col1, col2 = st.columns([3, 1])
         with col1:
             st.markdown("""
-            <div class="header-container" style="text-align: center; padding: 50px; background-color: #f5f5f5; border-radius: 10px;">
-            <h1 style="font-size: 2.5rem; color: #0F172A; margin-bottom: 15px;">🏛️ DocHub-AI</h1>
-            <p style="font-size: 1.25rem; color: #0F172A; margin-bottom: 5px;">Your Intelligent Companion for Smarter Government Documentation</p>
-            <p style="font-size: 1rem; color: #7f8c8d;">Streamline, simplify, and supercharge your document management like never before!</p>
-        </div>
+            <div class="header-container" style="text-align: center; padding: 50px; background-color: #808000; border-radius: 10px;">
+                <h1 style="font-size: 2.5rem; color: #D4C6B4; margin-bottom: 15px;">🏛️ DocHub-AI</h1>
+                <p style="font-size: 1.25rem; color: #D4C6B4; margin-bottom: 5px;">Your Intelligent Companion for Smarter Government Documentation</p>
+                <p style="font-size: 1rem; color: #D4C6B4;">Streamline, simplify, and supercharge your document management like never before!</p>
+            </div>
+
 
             """, unsafe_allow_html=True)
 
         with col2:
             try:
-                st.components.v1.html(html_code, height=250)
+                st.components.v1.html(html_code, height=300)
             except Exception as e:
                 st.error(f"Error loading HTML: {e}")
 def render_quick_actions():
