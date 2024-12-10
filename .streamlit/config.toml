@@ -1,8 +1,8 @@
 [theme]
-primaryColor = "#3B82F6"
-backgroundColor = "#0F172A"
-secondaryBackgroundColor = "#1E293B"
-textColor = "#E2E8F0"
+primaryColor = "#6B8E23"  # Olive green for primary highlights
+backgroundColor = "#FFF8DC"  # Cream for the background
+secondaryBackgroundColor = "#F5DEB3"  # Lighter cream for secondary elements
+textColor = "#556B2F"  # Olive green for text
 font = "sans serif"
 
 [server]

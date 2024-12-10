@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 from utils import initialize_session_state, get_document_history, delete_from_history, format_timestamp, format_analysis_results
+from theme import apply_dark_theme, show_page_header, show_footer
+
+# Apply dark theme
+st.markdown(apply_dark_theme(), unsafe_allow_html=True)
 
 def display_document_content(content):
     """Display formatted document content"""

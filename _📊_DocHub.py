@@ -1,203 +1,298 @@
 import streamlit as st
+from theme import custom_css
+import requests
+from datetime import datetime, timedelta
 from theme import apply_dark_theme, show_page_header, show_footer
-
-# Page config
+# Page configuration
 st.set_page_config(
-    page_title="BureauEase-AI",
+    page_title="DocHub-AI",
     page_icon="🏛️",
     layout="wide",
-    # initial_sidebar_state="collapsed"
+    initial_sidebar_state="auto"
 )
 
-# Apply dark theme
-st.markdown(apply_dark_theme(), unsafe_allow_html=True)
+def render_header():
+    """Render the main header with a gradient background."""
+    st.markdown(custom_css(), unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class='header-container'>
+        <h1>🏛️ DocHub-AI</h1>
+        <p>Your Intelligent Government Document Companion</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+def render_quick_actions():
+    """Render quick action buttons with modern styling."""
+    st.markdown("### 🚀 Quick Actions")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        if st.button("📝 Document Analysis", use_container_width=True):
+            st.switch_page("pages/1_📝_Document_Analysis.py")
+    
+    with col2:
+        if st.button("✍️ Writing Assistant", use_container_width=True):
+            st.switch_page("pages/3_✍️_Writing_Assistant.py")
+    
+    with col3:
+        if st.button("💬 Document Chat", use_container_width=True):
+            st.switch_page("pages/2_💬_Document_Chat.py")
+    
+    with col4:
+        if st.button("🧞 Guide Genie", use_container_width=True):
+            st.switch_page("pages/0_🧞_Guider_Genie.py")
+
+def render_features():
+    """Render features in a grid with modern card design."""
+    st.markdown("### 🌟 Key Features")
+    
+    features = [
+        {
+            "icon": "📑",
+            "title": "Document Analysis",
+            "description": "Advanced AI-powered document understanding with instant insights and comprehensive analysis."
+        },
+        {
+            "icon": "✍️",
+            "title": "Writing Assistant",
+            "description": "Intelligent document creation tools for RTI, legal notices, and various government communications."
+        },
+        {
+            "icon": "💬",
+            "title": "Interactive Help",
+            "description": "Real-time, context-aware guidance for navigating complex government procedures."
+        },
+        {
+            "icon": "📚",
+            "title": "Document Management",
+            "description": "Secure, efficient document storage with version tracking and quick retrieval."
+        }
+    ]
+    
+    cols = st.columns(4)
+    
+    for i, feature in enumerate(features):
+        with cols[i]:
+            st.markdown(f"""
+            <div class='feature-card'>
+                <h3><span>{feature['icon']}</span>{feature['title']}</h3>
+                <p>{feature['description']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+def render_workflow():
+    """Render workflow steps with progress indicators."""
+    st.markdown("### 🔄 How It Works")
+    
+    workflow_steps = [
+        {"title": "Upload Documents", "description": "Securely upload your government documents", "progress": 25},
+        {"title": "AI Processing", "description": "Our AI analyzes and interprets your documents", "progress": 50},
+        {"title": "Insights & Guidance", "description": "Receive clear explanations and actionable insights", "progress": 75},
+        {"title": "Take Action", "description": "Confidently proceed with recommended steps", "progress": 100}
+    ]
+    
+    cols = st.columns(4)
+    
+    for i, step in enumerate(workflow_steps):
+        with cols[i]:
+            st.markdown(f"""
+            <div class='feature-card'>
+                <h4>{step['title']}</h4>
+                <p>{step['description']}</p>
+                <div class='progress-container'>
+                    <div class='progress-bar' style='width: {step["progress"]}%'></div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+def render_target_audience():
+    """Render target audience and security information."""
+    st.markdown("### 🎯 Who Can Benefit")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        #### Target Audience
+        - Citizens navigating government procedures
+        - RTI applicants and activists
+        - Legal professionals
+        - Government service seekers
+        - Individuals requiring document assistance
+        """)
+    
+    with col2:
+        st.markdown("""
+        #### Security & Privacy
+        - End-to-end encryption
+        - Secure document processing
+        - No permanent document storage
+        - Privacy-first approach
+        - Regular security updates
+        """)
+
+GNEWS_API_KEY = st.secrets["api_keys"]["gnews_api_key"]
+
+def fetch_news(query):
+    """
+    Fetch news articles using GNews API
+    """
+    base_url = "https://gnews.io/api/v4/search"
+
+    params = {
+        "apikey": GNEWS_API_KEY,
+        "q": query,
+        "lang": "en",
+        "country": "in",
+        "max": 50,
+        "sortby": "publishedAt"
+    }
+
+    try:
+        response = requests.get(base_url, params=params)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            st.error(f"API Request Failed. Status Code: {response.status_code}")
+            st.write(response.text)
+            return None
+
+    except Exception as e:
+        st.error(f"Error fetching news: {e}")
+        return None
+
+def display_articles_grid(articles):
+    """
+    Display news articles in a 3-column grid format
+    """
+    # Create rows of 3 articles each
+    for i in range(0, len(articles), 5):
+        # Create 3 columns
+        cols = st.columns(5)
+        
+        # Fill each column with an article
+        for col_idx in range(5):
+            article_idx = i + col_idx
+            
+            # Check if we still have articles to display
+            if article_idx < len(articles):
+                article = articles[article_idx]
+                
+                with cols[col_idx]:
+                    # Container for each article
+                    with st.container():
+                        # Image
+                        if article.get('image'):
+                            st.image(article['image'], use_container_width=True)
+                        else:
+                            st.image('https://via.placeholder.com/300x200.png?text=No+Image', use_column_width=True)
+                        
+                        # Title - using markdown for better control over text size
+                        st.markdown(f"### {article.get('title', 'No Title')}")
+                        
+                        # Description - truncated for better grid layout
+                        description = article.get('description', '')
+                        if description:
+                            if len(description) > 100:
+                                description = description[:100] + '...'
+                            st.write(description)
+                        
+                        # Source and date in compact format
+                        source_name = article.get('source', {}).get('name', 'Unknown Source')
+                        
+                        # Format date
+                        if article.get('publishedAt'):
+                            try:
+                                pub_date = datetime.fromisoformat(article['publishedAt'].replace('Z', '+00:00'))
+                                date_str = pub_date.strftime('%Y-%m-%d')
+                            except Exception:
+                                date_str = 'Date Not Available'
+                        else:
+                            date_str = 'Date Not Available'
+                        
+                        st.write(f"**{source_name}** | {date_str}")
+                        
+                        # Read more button
+                        st.markdown(f"[Read More]({article['url']})")
+                        
+                        # Add some spacing between articles
+                        st.markdown("---")
+
+def scheme():
+
+    st.title("Government Schemes")
+
+    schemes = {
+        "Student Welfare": [
+            "National Education Policy",
+            "PM Scholarship Scheme",
+            "Student Financial Assistance",
+            "Education Loan Schemes",
+            "Skill Development for Students"
+        ],
+        "Government Schemes for People": [
+            "PM Jan Dhan Yojana",
+            "Ayushman Bharat",
+            "Public Welfare Schemes",
+            "Social Security Schemes",
+            "Digital India Program"
+        ],
+        "Rural Farmers Support": [
+            "PM Kisan Samman Nidhi",
+            "Agricultural Loan Schemes",
+            "Farmer Welfare Programs",
+            "Pradhan Mantri Fasal Bima Yojana",
+            "Rural Infrastructure Development"
+        ]
+    }
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        category = st.selectbox(
+            "Select News Category",
+            list(schemes.keys())
+        )
+
+    with col2:
+        query = st.selectbox(
+            "Select Specific Query",
+            schemes[category]
+        )
+
+    fetch_button = st.button("Fetch News")
+
+    if fetch_button:
+        news_data = fetch_news(query)
+
+        if news_data and news_data.get('articles'):
+            articles = news_data['articles']
+            articles_with_images = [
+                article for article in articles
+                if article.get('image')
+            ]
+
+            if articles_with_images:
+                st.success(f"Found {len(articles_with_images)} articles for '{query}'")
+                display_articles_grid(articles_with_images[:21])  # Limit to 21 articles (7 rows of 3)
+            else:
+                st.warning("No articles found with images.")
+        else:
+            st.error("Unable to retrieve news articles.")
+
+    st.markdown("---")
+    st.info(
+        "📍 Focused on Indian Government Schemes"
+    )
 
 def main():
-    # Header
-    st.markdown(show_page_header(
-        "<div style='text-align: center;'>"
-        "🏛️ BureauEase-AI",
-        "<div style='text-align: center;'>"
-        "Your AI-powered companion for all government document needs",
-    ), unsafe_allow_html=True)
-    
-    # Quick Access Section - Mobile Friendly Cards
-    st.markdown(
-        "<div class='grid'>"  # Uses the responsive grid system
-        
-        "<div class='card' onclick='void(0)'>"  # Added onclick for better touch feedback
-        "<div style='text-align: center;'>"
-        "<h3 style='margin-bottom: 0.5rem;'>📝 Document Analysis</h3>"
-        "<p style='margin-bottom: 1rem;'>Upload and understand government documents instantly</p>"
-        "<div class='status-badge status-success'>Ready to Use</div>"
-        "</div>"
-        "</div>"
-        
-        "<div class='card' onclick='void(0)'>"
-        "<div style='text-align: center;'>"
-        "<h3 style='margin-bottom: 0.5rem;'>✍️ Writing Assistant</h3>"
-        "<p style='margin-bottom: 1rem;'>Create professional government documents effortlessly</p>"
-        "<div class='status-badge status-success'>Ready to Use</div>"
-        "</div>"
-        "</div>"
-        
-        "<div class='card' onclick='void(0)'>"
-        "<div style='text-align: center;'>"
-        "<h3 style='margin-bottom: 0.5rem;'>💬 Document Chat</h3>"
-        "<p style='margin-bottom: 1rem;'>Get instant answers about your documents</p>"
-        "<div class='status-badge status-success'>Ready to Use</div>"
-        "</div>"
-        "</div>"
-        
-        "</div>",
-        unsafe_allow_html=True
-    )
-    
-    # Quick Action Buttons - Touch Friendly
-    st.markdown("<div class='touch-spacing'>", unsafe_allow_html=True)
-    if st.button("📝 Start Document Analysis", use_container_width=True):
-        st.switch_page("pages/1_📝_Document_Analysis.py")
-    if st.button("✍️ Create New Document", use_container_width=True):
-        st.switch_page("pages/3_✍️_Writing_Assistant.py")
-    if st.button("💬 Open Document Chat", use_container_width=True):
-        st.switch_page("pages/2_💬_Document_Chat.py")
-    if st.button("🧞 Guide Genie", use_container_width=True):
-        st.switch_page('pages/0_🧞_Guider_Genie.py')
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Features Section - Responsive Grid
-    st.markdown("<h3 style='margin: 1.5rem 0 1rem;'>🌟 Key Features</h3>", unsafe_allow_html=True)
-    
-    # Features grid with improved mobile layout
-    st.markdown(
-        "<div class='grid'>"
-        
-        # Document Analysis Card
-        "<div class='card'>"
-        "<h3 style='margin-bottom: 0.75rem;'>📑 Document Analysis</h3>"
-        "<div class='touch-spacing'>"
-        "<p>✓ Instant document understanding</p>"
-        "<p>✓ Complex term explanations</p>"
-        "<p>✓ Form filling guidance</p>"
-        "<p>✓ Requirement extraction</p>"
-        "<p>✓ Deadline tracking</p>"
-        "</div>"
-        "</div>"
-        
-        # Writing Assistant Card
-        "<div class='card'>"
-        "<h3 style='margin-bottom: 0.75rem;'>✍️ Writing Assistant</h3>"
-        "<div class='touch-spacing'>"
-        "<p>✓ RTI application generator</p>"
-        "<p>✓ Complaint letter creator</p>"
-        "<p>✓ Legal notice drafting</p>"
-        "<p>✓ Appeal letter formatting</p>"
-        "<p>✓ Custom document templates</p>"
-        "</div>"
-        "</div>"
-        
-        # Interactive Help Card
-        "<div class='card'>"
-        "<h3 style='margin-bottom: 0.75rem;'>💬 Interactive Help</h3>"
-        "<div class='touch-spacing'>"
-        "<p>✓ Real-time document chat</p>"
-        "<p>✓ Context-aware responses</p>"
-        "<p>✓ Procedure explanations</p>"
-        "<p>✓ Multi-document support</p>"
-        "<p>✓ Instant clarifications</p>"
-        "</div>"
-        "</div>"
-        
-        # Document Management Card
-        "<div class='card'>"
-        "<h3 style='margin-bottom: 0.75rem;'>📚 Document Management</h3>"
-        "<div class='touch-spacing'>"
-        "<p>✓ Secure document storage</p>"
-        "<p>✓ Version tracking</p>"
-        "<p>✓ Easy organization</p>"
-        "<p>✓ Quick retrieval</p>"
-        "<p>✓ Status monitoring</p>"
-        "</div>"
-        "</div>"
-        "</div>",
-        unsafe_allow_html=True
-    )
-    
-    # How It Works Section - Mobile Friendly Steps
-    st.markdown("<h3 style='margin: 1.5rem 0 1rem;'>🔄 How It Works</h3>", unsafe_allow_html=True)
-    
-    st.markdown(
-        "<div class='grid'>"  # Responsive grid
-        
-        # Step 1
-        "<div class='card' style='text-align: center;'>"
-        "<h4 style='margin-bottom: 0.5rem;'>1. Upload</h4>"
-        "<p style='margin-bottom: 0.75rem;'>Upload your government documents or start creating new ones</p>"
-        "<div class='progress-bar'><div class='progress-bar-fill' style='width: 25%;'></div></div>"
-        "</div>"
-        
-        # Step 2
-        "<div class='card' style='text-align: center;'>"
-        "<h4 style='margin-bottom: 0.5rem;'>2. Process</h4>"
-        "<p style='margin-bottom: 0.75rem;'>Our AI analyzes and processes your documents instantly</p>"
-        "<div class='progress-bar'><div class='progress-bar-fill' style='width: 50%;'></div></div>"
-        "</div>"
-        
-        # Step 3
-        "<div class='card' style='text-align: center;'>"
-        "<h4 style='margin-bottom: 0.5rem;'>3. Understand</h4>"
-        "<p style='margin-bottom: 0.75rem;'>Get clear explanations and guidance for your documents</p>"
-        "<div class='progress-bar'><div class='progress-bar-fill' style='width: 75%;'></div></div>"
-        "</div>"
-        
-        # Step 4
-        "<div class='card' style='text-align: center;'>"
-        "<h4 style='margin-bottom: 0.5rem;'>4. Act</h4>"
-        "<p style='margin-bottom: 0.75rem;'>Take action with confidence using our recommendations</p>"
-        "<div class='progress-bar'><div class='progress-bar-fill' style='width: 100%;'></div></div>"
-        "</div>"
-        
-        "</div>",
-        unsafe_allow_html=True
-    )
-    
-    # Additional Information - Mobile Friendly Layout
-    st.markdown("<div class='grid'>", unsafe_allow_html=True)
-    
-    # Who Is This For Section
-    st.markdown(
-        "<div class='card'>"
-        "<h3 style='margin-bottom: 0.75rem;'>🎯 Who Is This For?</h3>"
-        "<div class='touch-spacing'>"
-        "<p>• Citizens dealing with government procedures</p>"
-        "<p>• RTI applicants and activists</p>"
-        "<p>• Legal professionals</p>"
-        "<p>• Government service seekers</p>"
-        "<p>• Anyone needing document assistance</p>"
-        "</div>"
-        "</div>",
-        unsafe_allow_html=True
-    )
-    
-    # Security & Privacy Section
-    st.markdown(
-        "<div class='card'>"
-        "<h3 style='margin-bottom: 0.75rem;'>🛡️ Security & Privacy</h3>"
-        "<div class='touch-spacing'>"
-        "<p>• End-to-end encryption</p>"
-        "<p>• Secure document processing</p>"
-        "<p>• No permanent storage</p>"
-        "<p>• Privacy-first approach</p>"
-        "<p>• Regular security updates</p>"
-        "</div>"
-        "</div>",
-        unsafe_allow_html=True
-    )
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    # Footer
-    st.markdown(show_footer(), unsafe_allow_html=True)
-
+    render_header()
+    render_quick_actions()
+    render_features()
+    render_workflow()
+    render_target_audience()
+    scheme()
 if __name__ == "__main__":
     main()
