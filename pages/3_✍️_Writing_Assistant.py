@@ -2,10 +2,11 @@ import streamlit as st
 from theme import apply_dark_theme, show_page_header, show_footer
 from utils import initialize_session_state, generate_document, save_to_history
 from datetime import datetime
+from fpdf import FPDF
 
 # Page config
 st.set_page_config(
-    page_title="Writing Assistant | CiviDoc AI",
+    page_title="Writing Assistant | DocHub-AI",
     page_icon="✍️",
     layout="centered",
     initial_sidebar_state="collapsed",
@@ -309,6 +310,15 @@ def show_custom_form(name, address, contact, email):
     if validate_and_generate("Custom Document", locals()):
         st.balloons()
 
+def generate_pdf(doc_content):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(200, 10, txt=doc_content, align="L")
+    # Save PDF to a binary stream
+    pdf_output = pdf.output(name=None, dest='S').encode('latin1')  # In-memory output
+    return pdf_output
+
 def validate_and_generate(doc_type, fields):
     """Validate fields and generate document"""
     if st.button(f"Generate {doc_type}", use_container_width=True):
@@ -328,8 +338,11 @@ def validate_and_generate(doc_type, fields):
         
         try:
             with st.spinner("Generating document..."):
-                # Generate document
+                # Generate document content (this can be any logic you want to use)
                 generated_content = generate_document(doc_type, fields)
+                
+                # Generate PDF from document content
+                pdf_content = generate_pdf(generated_content)
                 
                 # Save to history
                 timestamp = datetime.now()
@@ -352,10 +365,10 @@ def validate_and_generate(doc_type, fields):
                 col1, col2 = st.columns(2)
                 with col1:
                     st.download_button(
-                        "📥 Download Document",
-                        generated_content,
-                        file_name=f"{doc_name}.txt",
-                        mime="text/plain",
+                        "📥 Download as PDF",  # Text on the download button
+                        pdf_content,  # PDF content to download
+                        file_name=f"{doc_name}.pdf",  # PDF file name
+                        mime="application/pdf",  # MIME type for PDF
                         use_container_width=True
                     )
                 

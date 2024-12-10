@@ -61,6 +61,8 @@ def main():
         st.switch_page("pages/3_✍️_Writing_Assistant.py")
     if st.button("💬 Open Document Chat", use_container_width=True):
         st.switch_page("pages/2_💬_Document_Chat.py")
+    if st.button("🧞 Guide Genie", use_container_width=True):
+        st.switch_page('pages/0_🧞_Guider_Genie.py')
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Features Section - Responsive Grid

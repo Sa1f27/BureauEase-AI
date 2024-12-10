@@ -4,7 +4,7 @@ from utils import initialize_session_state
 
 # Page config
 st.set_page_config(
-    page_title="Document Chat |  CiviDoc AI",
+    page_title="Document Chat |  DocHub-AI",
     page_icon="💬",
     layout="centered",
     initial_sidebar_state="collapsed",
@@ -129,10 +129,7 @@ def handle_user_input(prompt, selected_doc):
             #         "content": error_message
             #     })
 
-            groq_api_key = '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'
-            client = Groq(api_key=groq_api_key)
-
-            groq_api_key = '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'
+            groq_api_key = st.secrets["api_keys"]["groq_api_key"]
             client = Groq(api_key=groq_api_key)
 
             try:
