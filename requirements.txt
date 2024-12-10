@@ -37,3 +37,4 @@ numpy
 pandas
 asyncio
 bs4
+fpdf
