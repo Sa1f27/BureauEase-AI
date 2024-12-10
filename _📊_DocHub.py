@@ -2,7 +2,8 @@ import streamlit as st
 from theme import custom_css
 import requests
 from datetime import datetime, timedelta
-from theme import apply_dark_theme, show_page_header, show_footer
+from theme import html_code
+import streamlit.components.v1 as components
 # Page configuration
 st.set_page_config(
     page_title="DocHub-AI",
@@ -14,13 +15,20 @@ st.set_page_config(
 def render_header():
     """Render the main header with a gradient background."""
     st.markdown(custom_css(), unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div class='header-container'>
-        <h1>🏛️ DocHub-AI</h1>
-        <p>Your Intelligent Government Document Companion</p>
-    </div>
-    """, unsafe_allow_html=True)
+    with st.container():
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.markdown("""
+            <div class="header-container" style="text-align: center; padding: 50px; background-color: #f5f5f5; border-radius: 10px;">
+            <h1 style="font-size: 2.5rem; color: #0F172A; margin-bottom: 15px;">🏛️ DocHub-AI</h1>
+            <p style="font-size: 1.25rem; color: #0F172A; margin-bottom: 5px;">Your Intelligent Companion for Smarter Government Documentation</p>
+            <p style="font-size: 1rem; color: #7f8c8d;">Streamline, simplify, and supercharge your document management like never before!</p>
+        </div>
+
+            """, unsafe_allow_html=True)
+
+        with col2:
+            st.components.v1.html(html_code, height=250)
 
 def render_quick_actions():
     """Render quick action buttons with modern styling."""
@@ -133,6 +141,7 @@ def render_target_audience():
         - Regular security updates
         """)
 
+#============SCHEMES====================#
 GNEWS_API_KEY = st.secrets["api_keys"]["gnews_api_key"]
 
 def fetch_news(query):
@@ -221,9 +230,13 @@ def display_articles_grid(articles):
                         st.markdown("---")
 
 def scheme():
-
     st.title("Government Schemes")
 
+    # Default values for fetching news at the beginning
+    default_category = "Student Welfare"
+    default_query = "National Education Policy"
+
+    # Schemes for dropdown options
     schemes = {
         "Student Welfare": [
             "National Education Policy",
@@ -248,44 +261,55 @@ def scheme():
         ]
     }
 
+    # Create layout for category and query filters
     col1, col2 = st.columns(2)
 
     with col1:
         category = st.selectbox(
             "Select News Category",
-            list(schemes.keys())
+            list(schemes.keys()),
+            index=list(schemes.keys()).index(default_category)
         )
 
     with col2:
         query = st.selectbox(
             "Select Specific Query",
-            schemes[category]
+            schemes[category],
+            index=schemes[default_category].index(default_query)
         )
 
+    # Fetch and display news by default
+    if "default_articles" not in st.session_state:
+        st.session_state.default_articles = fetch_news(default_query)
+
+    # Button to fetch filtered news
     fetch_button = st.button("Fetch News")
 
+    # Load default or filtered articles
     if fetch_button:
         news_data = fetch_news(query)
+    else:
+        news_data = st.session_state.default_articles
 
-        if news_data and news_data.get('articles'):
-            articles = news_data['articles']
-            articles_with_images = [
-                article for article in articles
-                if article.get('image')
-            ]
+    if news_data and news_data.get('articles'):
+        articles = news_data['articles']
+        articles_with_images = [
+            article for article in articles if article.get('image')
+        ]
 
-            if articles_with_images:
-                st.success(f"Found {len(articles_with_images)} articles for '{query}'")
-                display_articles_grid(articles_with_images[:21])  # Limit to 21 articles (7 rows of 3)
-            else:
-                st.warning("No articles found with images.")
+        if articles_with_images:
+            st.success(
+                f"Found {len(articles_with_images)} articles for '{query}'"
+            )
+            display_articles_grid(articles_with_images[:21])  # Limit to 21 articles (7 rows of 3)
         else:
-            st.error("Unable to retrieve news articles.")
+            st.warning("No articles found with images.")
+    else:
+        st.error("Unable to retrieve news articles.")
 
     st.markdown("---")
-    st.info(
-        "📍 Focused on Indian Government Schemes"
-    )
+    st.info("📍 Focused on Indian Government Schemes")
+
 
 def main():
     render_header()

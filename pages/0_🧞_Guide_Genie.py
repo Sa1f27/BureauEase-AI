@@ -235,29 +235,8 @@ class SearchAssistant:
             "search_time": f"{time.time() - start_time:.1f} seconds"
         }
 
-# def home_page():
-#     st.title("Welcome to GovEase")
-#     st.write("""
-#     ### Your Government Document Assistant
-    
-#     GovEase helps you navigate government procedures and documentation requirements 
-#     across different countries. Get started by:
-    
-#     1. Selecting your preferred language
-#     2. Choosing your country
-#     3. Asking your question about government processes
-    
-#     We'll help you find the information you need!
-#     """)
-    
-#     # Quick start section
-#     st.subheader("Quick Start")
-#     if st.button("Start Your Search"):
-#         st.session_state.page = "AskWithEase"
-#         st.rerun()
-
 def ask_link():
-    st.title("Ask With Ease")
+    st.title("Guide Genie")
     
     # Language selection
     languages = {
@@ -272,7 +251,7 @@ def ask_link():
     
     # Country selection with search
     default_countries = [
-        "United States", "United Kingdom", "Canada", "Australia", "India",
+        "India", "United States", "United Kingdom", "Canada", "Australia",
         "Germany", "France", "Spain", "Brazil", "Japan"
     ]
     country = st.text_input("Enter Country", key="country_input")
@@ -305,47 +284,6 @@ def ask_link():
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
             st.error("Please try again with a different query or check your internet connection.")
-
-# def about_us_page():
-#     st.title("About Us")
-#     st.write("""
-#     ### Our Mission
-#     We aim to simplify access to government information and procedures through intelligent 
-#     search and comprehensive guidance. Our platform helps citizens navigate complex 
-#     bureaucratic processes with ease.
-    
-#     ### What We Offer
-#     - Intelligent document search
-#     - Multi-language support with translation
-#     - Country-specific guidance
-#     - Step-by-step assistance
-#     - Access to official sources
-    
-#     ### Contact Information
-#     For support or inquiries, please reach out to:
-#     - Email: oppoibrahim23@gmail.com
-#     """)
-
-# def main():
-    # try:
-    #     st.sidebar.image(
-    #         "https://raw.githubusercontent.com/muhammadibrahim313/Llama_impact-3.2/refs/heads/main/images/ge.webp ",
-    #         width=160,
-    #         caption="GovEase"
-    #     )
-        
-    #     st.sidebar.title("Navigation")
-    #     page = st.sidebar.radio("Go to", ["Home", "AskWithEase", "About Us"])
-        
-    #     if page == "Home":
-    #         home_page()
-    #     elif page == "AskWithEase":
-    #         ask_with_ease_page()
-    #     else:
-    #         about_us_page()
-    # except Exception as e:
-    #     st.error(f"An unexpected error occurred: {str(e)}")
-    #     st.error("Please refresh the page and try again.")
 
 if __name__ == "__main__":
     ask_link()

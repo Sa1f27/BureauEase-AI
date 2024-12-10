@@ -9,7 +9,7 @@ st.set_page_config(
     page_title="Writing Assistant | DocHub-AI",
     page_icon="✍️",
     layout="centered",
-    initial_sidebar_state="collapsed",
+    # initial_sidebar_state="collapsed",
 )
 
 # Apply dark theme
@@ -90,19 +90,29 @@ def show_rti_form(name, address, contact, email):
         unsafe_allow_html=True
     )
     
-    department = st.text_input("Department/Authority Name", placeholder="Enter department name")
-    subject = st.text_input("Subject of Information", placeholder="Enter subject")
+    department = st.text_input(
+        "Department/Authority Name", 
+        placeholder="Enter department name",
+        value="Public Information Officer, Municipal Corporation"
+    )
+    subject = st.text_input(
+        "Subject of Information", 
+        placeholder="Enter subject",
+        value="Request for sanitation data"
+    )
     
     st.markdown("<div class='touch-spacing'>", unsafe_allow_html=True)
     information = st.text_area(
         "Information Required",
         placeholder="Clearly specify the information you are seeking...",
+        value="Please provide the monthly expenditure details on sanitation for the year 2023.",
         height=150
     )
     
     time_period = st.text_input(
         "Time Period",
-        placeholder="Specify the time period for which information is sought"
+        placeholder="Specify the time period for which information is sought",
+        value="January 2023 - December 2023"
     )
     
     st.markdown("</div></div>", unsafe_allow_html=True)
@@ -118,7 +128,11 @@ def show_complaint_form(name, address, contact, email):
         unsafe_allow_html=True
     )
     
-    authority = st.text_input("Authority/Department Name", placeholder="Enter authority name")
+    authority = st.text_input(
+        "Authority/Department Name", 
+        placeholder="Enter authority name",
+        value="City Electricity Board"
+    )
     
     complaint_types = [
         "Public Service",
@@ -128,24 +142,31 @@ def show_complaint_form(name, address, contact, email):
         "Other"
     ]
     
-    complaint_type = st.selectbox("Type of Complaint", complaint_types)
+    complaint_type = st.selectbox(
+        "Type of Complaint", 
+        complaint_types, 
+        index=1  # Default selection
+    )
     
     st.markdown("<div class='touch-spacing'>", unsafe_allow_html=True)
     description = st.text_area(
         "Complaint Description",
         placeholder="Describe your complaint in detail...",
+        value="Frequent power outages in the locality have caused significant inconvenience. This issue needs immediate resolution.",
         height=150
     )
     
     previous_complaints = st.text_area(
         "Previous Complaints (if any)",
-        placeholder="Mention any previous complaints filed regarding this issue..."
+        placeholder="Mention any previous complaints filed regarding this issue...",
+        value="A similar issue was raised in January 2023 but remains unresolved."
     )
     
     st.markdown("</div></div>", unsafe_allow_html=True)
     
     if validate_and_generate("Complaint Letter", locals()):
         st.balloons()
+
 
 def show_legal_notice_form(name, address, contact, email):
     """Legal Notice Form"""
@@ -338,17 +359,22 @@ def validate_and_generate(doc_type, fields):
         
         try:
             with st.spinner("Generating document..."):
-                # Generate document content (this can be any logic you want to use)
+                st.write("Step 1: Generating document content.")
                 generated_content = generate_document(doc_type, fields)
-                
-                # Generate PDF from document content
+                st.write("Step 2: Document content generated successfully.")
+
+                st.write("Step 3: Generating PDF content.")
                 pdf_content = generate_pdf(generated_content)
+                st.write("Step 4: PDF content generated successfully.")
+                
                 
                 # Save to history
                 timestamp = datetime.now()
                 doc_name = f"{doc_type}_{timestamp.strftime('%Y%m%d_%H%M%S')}"
+                st.write("Step 5: Saving document to history.")
                 save_to_history(doc_name, doc_type, generated_content, timestamp)
-                
+                st.write("Step 6: Document saved successfully.")
+
                 # Show success message
                 st.success("Document generated successfully!")
                 

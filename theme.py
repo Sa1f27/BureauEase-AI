@@ -194,6 +194,11 @@ def custom_css():
     </style>
     """
 
+html_code = """
+<script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+<dotlottie-player src="https://lottie.host/ee7099f5-a693-4f40-9a81-b4a4dadc3ae9/LO7PLNgptk.lottie" background="transparent" speed="1" style="width: 300px; height: 300px" loop autoplay></dotlottie-player>
+"""
+
 def show_page_header(title, description=None):
     header_html = (
         "<div style='"
