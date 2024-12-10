@@ -4,6 +4,7 @@ import requests
 from datetime import datetime, timedelta
 from theme import html_code
 import streamlit.components.v1 as components
+
 # Page configuration
 st.set_page_config(
     page_title="DocHub-AI",
@@ -28,8 +29,10 @@ def render_header():
             """, unsafe_allow_html=True)
 
         with col2:
-            st.components.v1.html(html_code, height=250)
-
+            try:
+                st.components.v1.html(html_code, height=250)
+            except Exception as e:
+                st.error(f"Error loading HTML: {e}")
 def render_quick_actions():
     """Render quick action buttons with modern styling."""
     st.markdown("### 🚀 Quick Actions")
