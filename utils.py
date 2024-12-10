@@ -14,7 +14,7 @@ from PIL import Image
 import gettext
 
 
-groq_api_key = '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'
+groq_api_key = st.secrets["api_keys"]["groq_api_key"]
 client = Groq(api_key=groq_api_key)
 
 # Configure LlamaIndex
