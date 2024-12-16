@@ -42,14 +42,22 @@ DocHub-AI provides an all-in-one platform with five key features:
 ## 🚀 Getting Started
 
 ### Installation
-```bash
+```
 # Clone the repository
 git clone https://github.com/Sa1f27/DocHub-AI.git
-
-# Install dependencies
 cd DocHub-AI
-pip install -r requirements.txt
+```
 
+
+# Create and Activate a Virtual Environment
+```
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+# Install dependencies and run the App
+```
+pip install -r requirements.txt
 streamlit run app.py
 ```
 
