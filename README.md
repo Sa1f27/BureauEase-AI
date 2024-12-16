@@ -1,6 +1,6 @@
 # DocHub-AI 
 
-An AI-powered platform revolutionizing how Indians interact with government services and documentation. Built during the 48-hour CodeFest Hackathon in partnership with Edventure Park and Code for India.
+An AI-powered platform revolutionizing how Indians interact with government services and documentation. Built during the 48-hour CodeFest Hackathon
 
 ## 🎯 Problem Statement
 In India, millions struggle daily with:
@@ -39,13 +39,6 @@ DocHub-AI provides an all-in-one platform with five key features:
 - Service-based filtering
 - Contact information directory
 
-## 🔧 Tech Stack
-- Frontend: [Add your frontend framework]
-- Backend: [Add your backend framework]
-- AI/ML: RAG-based architecture
-- Database: [Add your database]
-- APIs: [List major APIs used]
-
 ## 🚀 Getting Started
 
 ### Installation
@@ -70,9 +63,6 @@ streamlit run app.py
 7. ![Screenshot 2024-12-11 021531](https://github.com/user-attachments/assets/eb3dce6c-01dc-407e-91a2-fb5b6b04c921)
 8. ![Screenshot 2024-12-11 021626](https://github.com/user-attachments/assets/84993782-9a43-43c4-abde-86f0b463e29a)
 9. ![Screenshot 2024-12-12 111657](https://github.com/user-attachments/assets/e19ef5c3-5243-47e3-8c23-f5b66599735d)
-
-## 🤝 Contributing
-We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting a Pull Request.
 
 ## 🔒 Security
 - End-to-end encryption
