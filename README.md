@@ -58,7 +58,7 @@ python -m venv venv
 # Install dependencies and run the App
 ```
 pip install -r requirements.txt
-streamlit run app.py
+streamlit run _📊_DocHub.py
 ```
 
 ## 📱 Features Demo
